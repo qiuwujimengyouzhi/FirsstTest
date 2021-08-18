@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="../CSS/addPro.css" rel="stylesheet" />
+    <script src="../JS/jquery-1.11.2.min.js"></script>
+    <script src="../bootstrap-4.3.1-dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <title>添加商品</title>
+</head>
+
+<body>
+    <form class="addPro" role="form" action="#" method="post">
+        <div class="form-group">
+            商品图片：<input type="file" class="pic" /> 商品名：
+            <input class="form-control product" type="text" /> 类型：
+            <input class="form-control type" type="text" /> 价格：
+            <input class="form-control price" type="text" />折扣：
+            <input class="form-control discount" type="text" />生产时间：
+            <input class="form-control time" type="date" />产地：
+            <input class="form-control place" type="text" />
+            <input class="btn btn-primary btn-lg " id="sub" type="submit" value="提交" />
+        </div>
+    </form>
+</body>
+<script>
+    $('#sub').on('click', function() {
+        let addre = tupian()
+        let product = $('.product').val()
+        let type = $('.type').val()
+        let price = $('.price').val()
+        let discount = $('.discount').val()
+        let time = $('.time').val()
+        let place = $('.place').val()
+        let store = storename()
+        alert(store)
+        $.ajax({
+            data: {
+                addre: addre,
+                product: product,
+                type: type,
+                price: price,
+                discount: discount,
+                time: time,
+                place: place,
+                store: store
+            },
+            url: 'http://localhost:3000/product/addPro',
+            dataType: 'json',
+            type: 'POST',
+            // async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(result) {
+                if (result) {
+                    alert('添加成功')
+                    window.location.href = 'product.html'
+                }
+            },
+            error: function() {
+                alert('请求错误')
+            }
+        });
+        return false
+    });
+
+    function storename() {
+        let store = ''
+        $.ajax({
+            url: 'http://localhost:3000/user/username',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                store = data.userid
+            }
+        });
+        return store
+    }
+
+    $('.pic').on('change', function() {
+        tupian();
+    });
+
+    function tupian() {
+        let file = $('.pic').get(0).files[0]
+        let formdata = new FormData()
+        let address = ''
+        formdata.append('pro', file)
+        $('.proPic').remove()
+        $('.pic').after('<img src=" " class="proPic" />') //append/after标签内部/外部插入
+        $.ajax({
+            url: 'http://localhost:3000/product/img',
+            type: 'post',
+            cache: false,
+            async: false,
+            processData: false,
+            contentType: false,
+            data: formdata,
+            success: function(data) {
+                if (data.err == 0) {
+                    $('.proPic').attr('src', `http://localhost:3000${data.img}`)
+                        // alert(data.img) // /public/img/xxx.jpg
+                    address = data.img
+                        // alert(address)
+                } else if (data.err == 1) {
+                    alert('图片尺寸过大')
+                } else {
+                    alert('图片类型不符（jpg,jpeg,png）')
+                }
+            }
+        })
+        return address
+    }
+</script>
+
+</html>

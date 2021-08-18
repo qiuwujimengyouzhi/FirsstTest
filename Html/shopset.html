@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>店铺管理</title>
+    <link href="../CSS/shop.css" rel="stylesheet" />
+    <script type="text/javascript" src="../JS/jquery-1.11.2.min.js"></script>
+</head>
+
+<body>
+    <div class="shop">
+        <div class="card">
+            <fieldset>
+                <legend class="div-title">基本资料</legend>
+                <h4>店铺名称：<input type="text" class="storeName"></h4>
+                <h4>店铺介绍：<textarea class="storeIntro"></textarea> </h4>
+            </fieldset>
+        </div>
+
+        <div class="card">
+            <fieldset>
+                <legend class="div-title">店铺管理</legend>
+                <h4>店铺背景图：</h4>
+                <input type="file" class="storeBg">
+                <h6 class="warn">用于宣传企业或店铺形象用，请勿上传带二维码或其他信息图片。</h6>
+            </fieldset>
+        </div>
+        <div style="margin-top: 20px;margin-left:400px ;">
+            <input type="submit" class="sub">
+        </div>
+    </div>
+</body>
+<script>
+    $('.sub').click(function() {
+        let storeName = $('.storeName').val()
+        let storeIntro = $('.storeIntro').val()
+        let file = $('.storeBg').get(0).files[0]
+        let formdata = new FormData()
+        var yanz = new RegExp("[^a-zA-Z0-9\_\u4e00-\u9fa5]", "i");
+        let storeBg = $('.storeBg').val()
+            // alert(storeBg == '')
+        formdata.append('pro', file)
+        if (storeName == '') {
+            alert('店铺名不能为空，且只能设置一次')
+            return false
+        } else if (yanz.test(storeName) == true) {
+            alert("店铺名称中含有非法字符");
+            return false;
+        } else if (storeBg == '') {
+            alert('请编辑图片')
+            return false
+        }
+        $.ajax({
+            url: 'http://localhost:3000/user/username',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                let user = data.userid
+                if (data.flag) {
+                    $.ajax({
+                        url: 'http://localhost:3000/product/img',
+                        type: 'post',
+                        cache: false,
+                        async: false,
+                        processData: false,
+                        contentType: false,
+                        data: formdata,
+                        success: function(data) {
+                            if (data.err == 0) {
+                                // alert(user)
+                                $.ajax({
+                                        data: {
+                                            username: user,
+                                            storeName: storeName,
+                                            storeIntro: storeIntro,
+                                            pic: data.img
+                                        },
+                                        url: 'http://localhost:3000/user/store',
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        async: false,
+                                        success: function(flag) {
+                                            alert('ok')
+                                            if (flag) {
+                                                alert('设置成功')
+                                                window.location.href = 'index.html'
+                                            } else {
+                                                alert('失败')
+                                            }
+                                        },
+                                        error: function() {
+                                            alert("失败")
+                                        }
+
+                                    })
+                                    // $('.xiangpian').attr('src', `http://localhost:3000${data.img}`)
+                            } else if (data.err == 1) {
+                                alert('图片尺寸过大')
+                            } else {
+                                alert('图片类型不符（jpg,jpeg,png）')
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    });
+</script>
+
+</html>

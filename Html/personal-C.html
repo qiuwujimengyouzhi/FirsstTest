@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../JS/jquery-1.11.2.min.js"></script>
+    <link href="../CSS/personal.css" type="text/CSS" rel="stylesheet" />
+    <link href="http://at.alicdn.com/t/font_1740081_pfb3yp6lgl.css" rel="stylesheet" />
+    <!-- <link href="../bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script src="../bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> -->
+    <!-- <script type="text/javascript" src="../JS/personal.js"></script> -->
+    <title>个人中心</title>
+</head>
+
+<body bgcolor="blanchedalmond">
+    <div class="box">
+        <div class="top-line">
+            <div class="touxiang">
+                <h5 class="yonghu">欢迎你:</h5>
+                <a href="#"><img src="../img/yonghu.jpg" class="xiangpian" onclick="fileSel()" /></a>
+                <input type="file" id="upload" onchange="tupian()" style="display: none;" />
+            </div>
+            <div class="head-bg">
+                <a href="index.html"><img class="beijing" src="../img/logo4.jpg"></a>
+            </div>
+        </div>
+        <div class="nav-left">
+            <div class="conbox">
+                <!--内容导航-->
+                <div class="con-nav">
+
+                    <a class="chufa chufa1 iconfont icon-tubiao-">更改设置<i class="down iconfont icon-icon-test10"></i>
+					          <ul class="iconfont updown updown1">
+						          <li class="list pwd">修改密码</li>
+						          <li class="list pic">修改头像</li>
+                    </ul>
+                  </a>
+
+                    <a class="chufa chufa2 iconfont icon-icon-test1">地址管理<i class="down iconfont icon-icon-test10"></i> 
+					          <ul class="iconfont updown updown2">
+						          <li class="list address">添加地址</li>
+						          <li class="list changeAdd">修改地址</li>
+                    </ul>
+                  </a>
+
+                    <a class="chufa chufa3 iconfont icon-icon-test">订单管理<em class="down iconfont icon-icon-test10"></em>
+				            <ul class="iconfont updown updown3">
+						          <li class="list order">查看订单</li>						
+                    </ul>
+                  </a>
+
+                    <a class="chufa chufa4 iconfont icon-app_icons--">退出登录<em class=" down iconfont icon-icon-test10"></em>
+                    <ul class="iconfont updown updown4">
+						          <li class="exit">确认退出</li>
+						          <li class="list changeC">切换账号</li>
+                    </ul>
+                  </a>
+                </div>
+
+                <div class="content">
+                    <!-- 标签页头 -->
+                    <ul id="myTab" class="nav nav-tabs" style="background-color: antiquewhite;">
+                        <li class="welcome active">
+                            <a href="#welcome" data-toggle="tab">欢迎你</a>
+                        </li>
+                    </ul>
+                    <!-- 标签页内容 -->
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane  active " id="welcome">
+                            <img src="../img/mylogo.PNG" />
+                        </div>
+                        <!-- <div class="tab-pane xian  " id="shop">
+                            <iframe frameborder="0" height="468px" width="100%" src="shop.html"></iframe>
+                        </div> -->
+                        <!-- <div class="tab-pane xian  " id="product">
+                          我的商品
+                            <iframe frameborder="0" height="450px" width="100%" src="product.html"></iframe>
+                        </div> -->
+                        <div class="tab-pane 	xian  " id="pwd">
+                            <!-- 修改密码 -->
+                            <iframe frameborder="0" height="468px" width="100%" src="changePwd.html"></iframe>
+                        </div>
+                        <div class="tab-pane xian  " id="pic">
+                            <!-- 修改头像 -->
+                            <p style="font-size: 24px;text-align: center;margin-top: 200px;">点击头像修改</p>
+                        </div>
+                        <div class="tab-pane xian  " id="order">
+                            <!-- 订单 -->
+                            <iframe frameborder="0" height="468px" width="100%" src="order.html"></iframe>
+                        </div>
+                        <div class="tab-pane xian  " id="address">
+                            <!-- 加地址 -->
+                        </div>
+                        <div class="tab-pane xian  " id="changeAdd">
+                            <!-- 修改地址 -->
+                        </div>
+                        <div class="tab-pane xian  " id="changeC">
+                            <!-- 切换账号 -->
+                            <iframe frameborder="0" height="468px" width="100%" src="changeC.html"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="neirong">
+                <img src="../images/per-con.jpg" />
+            </div> -->
+        </div>
+    </div>
+</body>
+<script>
+    function fileSel() {
+        $('#upload').click()
+    }
+
+    function tupian() {
+        let userid = name()
+        let file = $('#upload').get(0).files[0]
+        let formdata = new FormData()
+        let address = ''
+        formdata.append('user', file)
+            // $('.xiangpian').attr('src', ' ')
+            //append/after标签内部/外部插入
+        alert('ok')
+        $.ajax({
+            url: 'http://localhost:3000/product/userimg',
+            type: 'post',
+            cache: false,
+            async: false,
+            processData: false,
+            contentType: false,
+            data: formdata,
+            success: function(data) {
+                    if (data.err == 0) {
+                        $('.xiangpian').attr('src', `http://localhost:3000${data.img}`)
+                        address = data.img
+                        $.ajax({
+                            data: {
+                                address: address,
+                                userid: userid
+                            },
+                            url: 'http://localhost:3000/user/touxiang',
+                            dataType: 'json',
+                            type: 'POST',
+                            cache: false,
+                            timeout: 5000,
+                        })
+                    } else if (data.err == 1) {
+                        $('.xiangpian').attr('src', '../img/yonghu.jpg')
+                        alert('图片尺寸过大')
+                    } else {
+                        $('.xiangpian').attr('src', '../img/yonghu.jpg')
+                        aler('图片类型不符（jpg,jpeg,png）')
+                    }
+                }
+                // })
+                // return address
+        })
+        return address
+    }
+
+    function name() {
+        let id = ''
+        let addre = ''
+        $.ajax({
+            url: 'http://localhost:3000/user/username',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                id = data.userid
+
+            }
+        })
+        return id
+    }
+
+    $(function() {
+
+            $.ajax({
+                url: 'http://localhost:3000/user/username',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                cache: false,
+                timeout: 5000,
+                success: function(data) {
+                    if (data.flag) {
+                        $('.yonghu').append(data.name)
+                        alert(data.pic)
+                        $('.xiangpian').attr('src', `http://localhost:3000${data.pic}`)
+                    }
+                }
+            });
+        })
+        // 上一个tab值
+        // function preTab() {
+        //     $('.list').click(function() {
+        //         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        //             let activeTab = $(e.target).text();
+        //             let previousTab = $(e.relatedTarget).text();
+        //             alert(activeTab + previousTab);
+        //         });
+        //     })
+        // }
+
+    let pwdS = '<li ><li class="pwdS"><a href="#pwd" data-toggle="tab">修改密码</a></li></li>'
+    let picS = '<li ><li class="picS"><a href="#pic" data-toggle="tab">修改头像</a></li></li>'
+    let addressS = '<li ><li class="addressS"><a href="#address" data-toggle="tab">添加地址</a></li></li>'
+    let changeAddS = '<li ><li class="changeAddS"><a href="#changeAdd" data-toggle="tab">修改地址</a></li></li>'
+    let orderS = '<li ><li class="orderS"><a href="#order" data-toggle="tab">订单管理</a></li></li>'
+    let changeCS = '<li ><li class="changeCS"><a href="#changeC" data-toggle="tab">切换账号</a></li></li>'
+
+    // $('#changeC').click(function() {
+    //     alert('ok')
+    // })
+
+    $('.changeC').click(function() {
+        // alert($('.changeCS').length)
+        if ($('.changeCS').length == 1) {
+            $('.changeCS').remove()
+            $('.welcome').addClass('active').siblings('li').removeClass('active')
+            $('#welcome').addClass('active').siblings('div').removeClass('active')
+                // $(preTab).addClass('active').siblings('div').removeClass('active')
+        } else {
+            $('#myTab').append(changeCS)
+            $('.changeCS').addClass('active').siblings('li').removeClass('active')
+            $('#changeC').addClass('active').siblings('div').removeClass('active')
+
+        }
+    });
+
+    $('.order').click(function() {
+        if ($('.orderS').length >= 1) {
+            $('.orderS').remove()
+            $('.welcome').addClass('active').siblings('li').removeClass('active')
+            $('#welcome').addClass('active').siblings('div').removeClass('active')
+        } else {
+            $('#myTab').append(orderS)
+            $('.orderS').addClass('active').siblings('li').removeClass('active')
+            $('#order').addClass('active').siblings('div').removeClass('active')
+        }
+    });
+
+    $('.changeAdd').click(function() {
+        if ($('.changeAddS').length >= 1) {
+            $('.changeAddS').remove()
+            $('.welcome').addClass('active').siblings('li').removeClass('active')
+            $('#welcome').addClass('active').siblings('div').removeClass('active')
+
+        } else {
+            $('#myTab').append(changeAddS)
+            $('.changeAddS').addClass('active').siblings('li').removeClass('active')
+            $('#changeAdd').addClass('active').siblings('div').removeClass('active')
+        }
+    });
+
+    $('.address').click(function() {
+        if ($('.addressS').length >= 1) {
+            $('.addressS').remove()
+            $('.welcome').addClass('active').siblings('li').removeClass('active')
+            $('#welcome').addClass('active').siblings('div').removeClass('active')
+        } else {
+            $('#myTab').append(addressS)
+            $('.addressS').addClass('active').siblings('li').removeClass('active')
+            $('#address').addClass('active').siblings('div').removeClass('active')
+        }
+    });
+
+    $('.pic').click(function() {
+        if ($('.picS').length >= 1) {
+            $('.picS').remove()
+            $('.welcome').addClass('active').siblings('li').removeClass('active')
+            $('#welcome').addClass('active').siblings('div').removeClass('active')
+        } else {
+            $('#myTab').append(picS)
+            $('.picS').addClass('active').siblings('li').removeClass('active')
+            $('#pic').addClass('active').siblings('div').removeClass('active')
+        }
+    });
+
+    $('.pwd').click(function() {
+        if ($('.pwdS').length >= 1) {
+            $('.pwdS').remove()
+            $('.welcome').addClass('active').siblings('li').removeClass('active')
+            $('#welcome').addClass('active').siblings('div').removeClass('active')
+        } else {
+            // $('.neirong').remove()
+            $('#myTab').append(pwdS)
+            $('.pwdS').addClass('active').siblings('li').removeClass('active')
+            $('#pwd').addClass('active').siblings('div').removeClass('active')
+        }
+    });
+
+    $('.updown').hide()
+        // $('.content').hide();
+    $('.chufa0').hover(function() {
+        $('.updown0').show()
+    }, function() {
+        $(".updown0").hide()
+    });
+    $('.chufa1').hover(function() {
+        $('.updown1').show()
+    }, function() {
+        $(".updown1").hide()
+    });
+    $('.chufa2').hover(function() {
+        $('.updown2').show()
+    }, function() {
+        $(".updown2").hide()
+    });
+    $('.chufa3').hover(function() {
+        $('.updown3').show()
+    }, function() {
+        $(".updown3").hide()
+    });
+    $('.chufa4').hover(function() {
+        $('.updown4').show()
+    }, function() {
+        $(".updown4").hide()
+    });
+    $('.exit').on('click', function() {
+            let sure = confirm('确认退出吗')
+            if (sure) {
+                $.ajax({
+                    url: 'http://localhost:3000/user/logout',
+                    dataType: 'json',
+                    type: 'POST',
+                    cache: false,
+                    timeout: 5000,
+                    success: function() {
+                        alert('退出成功')
+                        window.location.href = 'index.html'
+                    },
+                    error: function() {
+                        alert("退出失败")
+                    }
+                })
+            }
+        })
+        // $(document).ready(function() {
+</script>
+
+</html>

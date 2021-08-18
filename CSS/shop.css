@@ -1,0 +1,35 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+.card {
+    margin-bottom: 50px;
+}
+
+fieldset {
+    border-radius: 8px;
+    background-color: #FFF;
+    box-shadow: 10px 5px 10px 0 rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 0.5px solid #885DD8
+}
+
+.tupian {
+    width: 200px;
+    height: 200px;
+}
+
+.div-title {
+    color: aqua;
+}
+
+.warn {
+    color: #B8B8B8;
+    margin-bottom: -5px
+}
+
+.shop {
+    height: 468px;
+    width: 100%;
+    border-radius: 5px;
+}

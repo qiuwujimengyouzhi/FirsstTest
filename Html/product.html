@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link href="../CSS/product.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../JS/jquery-1.11.2.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Pro</title>
+</head>
+
+<body>
+    <div class="box">
+        <div class="footer">
+            <ul class="pagination">
+                <li value="pre"><a href="#">《</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li value="aft"><a href="#">》</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    $(document).ready(function() {
+
+        $('.box').on('click', '.add', function() {
+            //alert('ok');
+            window.location.href = 'addPro.html'
+        });
+
+        $('.box').on('click', '.del', function() {
+            if (confirm('确定要删除吗') == true) {
+                var indexNO = $('.del').index(this);
+                alert(indexNO)
+                $.ajax({
+                    data: {
+                        index: indexNO
+                    },
+                    url: 'http://localhost:3000/product/delPro',
+                    dataType: 'json',
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    timeout: 5000,
+                    success: function(data) {
+                        if (data) {
+                            alert('删除成功，请刷新')
+                        } else {
+                            alert('删除失败')
+                        }
+                    }
+                })
+            }
+        });
+
+        $('.box').on('click', '.ref', function() {
+            alert('Already Completed!')
+            window.location.href = 'product.html'
+        });
+
+
+
+        $.ajax({
+            url: 'http://localhost:3000/user/username',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                let user = data.userid
+
+                $.ajax({
+                    data: {
+                        userid: user
+                    },
+                    url: 'http://localhost:3000/product/priPro',
+                    dataType: 'json',
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    timeout: 5000,
+                    success: function(result) {
+                        // alert(result == '')
+                        if (result != '') {
+
+
+                            let jsonLength = 0;
+                            for (let item in result) {
+                                jsonLength++;
+                            }
+                            // alert(jsonLength)
+                            first(0, 3)
+                            let page = 1
+                            $('.pagination>li').click(function() {
+
+                                pages = $(this).text()
+                                alert('aa' + $(this).text())
+                                if (pages == '《') {
+                                    page = page - 1
+                                } else if (pages == '》') {
+                                    page = page + 1
+                                } else {
+                                    page = pages
+                                }
+                                alert('now' + page)
+                                if (page == 0) {
+                                    alert('已经是第一页')
+                                    page = 1
+                                } else if (4 * page - 4 > jsonLength) { //每页数据4条
+                                    alert('没有这一页')
+                                    page = Math.ceil(jsonLength / 4) //重置page为当前页
+                                } else if (4 * page + 1 > jsonLength) {
+                                    if (4 * page - 4 < jsonLength) {
+                                        a = 4 * page - 4
+                                        b = jsonLength
+                                        first(a, b)
+                                    } else {
+                                        $(this).addClass('.disabled')
+                                    }
+                                } else {
+                                    let a = 4 * page - 4
+                                    let b = 4 * page - 1
+                                    first(a, b)
+                                }
+                                //     let a = 4 * page - 3
+                                //     let b = 4 * page + 1
+                                //     first(a, b);
+                                // } else {
+                                //     let a = 4 * page - 4
+                                //     let b = jsonLength
+                                //     first(a, b)
+                                // }
+                            })
+                        }
+
+                        function first(pageF, pageL) {
+                            // alert('first' + pageF)
+                            // alert('second' + pageL)
+                            $('.product').remove()
+                            for (let i = pageF; i < pageL + 1; i++) {
+                                // alert((result[i].time).getTime())
+                                let d = new Date(result[i].time)
+                                let times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+                                let html = '<div class="product"> <div class="card">'
+                                html += '<table class="msg" bordercolorlight="#A05153" border-collapse: "separate" cellpadding="0" cellspacing="0">'
+                                html += '<tbody> <tr><th>图片</th><th>商品名</th><th>价格</th> <th>生产地址</th>'
+                                html += '<th>商品类型</th> <th>优惠</th> <th>生产时间</th><th>商家</th>'
+                                html += '</tr><tr><td><img class="tupian" src="http://localhost:3000' + result[i].pictures + '"</td><td>' + result[i].product + '</td>'
+                                html += '<td>' + result[i].price + '</td><td>' + result[i].place + '</td>'
+                                html += '<td>' + result[i].type + '</td><td>' + result[i].discount + '</td><td>' + times + '</td>'
+                                html += '<td>' + result[i].store + '</td>'
+                                html += '</tr></tbody></table></div><div class="btm">'
+                                html += '<input type="button" class="add" value="添加" />'
+                                html += '<input type="button" class="del" value="删除" />'
+                                html += '<input type="button" class="ref" value="刷新" /></div></div>'
+                                $('.box').prepend(html)
+                            }
+                        }
+                    }
+                })
+            }
+
+
+        });
+
+
+
+
+    });
+</script>
+
+</html>

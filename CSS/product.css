@@ -1,0 +1,74 @@
+th,
+td {
+    text-align: center;
+    width: 100px;
+    height: 50px
+}
+
+.msg {
+    /*		border-radius: 8px;*/
+    background-color: #FFF;
+    box-shadow: 10px 5px 10px 0 rgba(0, 0, 0, 0.4);
+    /*    border-radius: 10px;*/
+    /*	border: 0.5px solid #885DD8;*/
+    height: 130px;
+}
+
+table tr:last-child,
+td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 0px;
+}
+
+table tr th,
+table tr td {
+    border-right: 1px solid #d4d8da;
+    border-bottom: 1px solid #d4d8da;
+    padding: 5px;
+}
+
+.btm {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-right: 130px;
+}
+
+.btm>input {
+    background-color: white;
+    border-radius: 5px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+.product {
+    padding-top: 20px;
+    margin-left: 120px;
+    margin-bottom: 20px;
+}
+
+.box {
+    height: 468px;
+    width: 100%;
+}
+
+.footer>.pagination>li>a {
+    text-align: center;
+    border: 0px;
+    display: inline-flex;
+    margin: 0px 10px 0px 10px;
+}
+
+.footer>.pagination {
+    display: inline-flex;
+    margin-left: 350px;
+    margin-top: 1px;
+}
+
+.tupian {
+    width: 100px;
+    height: 100px;
+}

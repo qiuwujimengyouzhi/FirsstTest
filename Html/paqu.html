@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="refresh" content="1"> -->
+    <link href="../CSS/font-awesome.css" rel="stylesheet">
+    <link href="../CSS/header.css" type="text/css" rel="stylesheet">
+    <link href="../CSS/index.css" rel="stylesheet">
+    <link href="../CSS/paqu.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script src="../JS/jquery-1.11.2.min.js"></script>
+    <script src="../JS/index.js"></script>
+    <script src="../JS/paqu.js"></script>
+    <title>爬取行情数据</title>
+</head>
+
+<body bgcolor="blanchedalmond">
+    <!-- 头部区域 -->
+    <div class="topbox">
+        <div class="top">
+            <a href="index.html"><img src="../img/logo3.jpg" class="top-logo"></a>
+            <div class="t-sousuo">
+                <div class="sousuok">
+                    <input type="text" placeholder="苹果" class="t-txt">
+                    <input type="button" value="搜&nbsp;索" class="t-btn">
+                </div>
+                <span class="t-gjc">关键词：<span style="color: #cf3232;">水产</span>&nbsp; 粮油 &nbsp; 蔬菜&nbsp; 花草&nbsp; 幼苗&nbsp; 禽畜&nbsp; 农机</span>
+            </div>
+            <ul class="yonghu">
+                <div class="loginO">
+                    <a href="loginReg.html">登陆</a>
+                    <span>|</span>
+                    <a href="register.html">注册</a>
+                </div>
+            </ul>
+        </div>
+    </div>
+    <!-- 导航区域 -->
+    <div class="navbox">
+        <nav class="nav">
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="chanping.html">产品</a></li>
+                <li><a href="jianjie.html">网站简介</a></li>
+                <li class="navhover"><a href="paqu.html">行情大厅</a></li>
+                <li><a href="callus.html">联系我们</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- 内容区域 -->
+    <div class="banbox">
+
+    </div>
+    <div id="box_x">
+        <div id="market-title">
+            <span class="time">时间</span>
+            <span class="product">产品</span>
+            <span class="place">产地</span>
+            <span class="price">价格</span>
+            <span class="lifting">升/降</span>
+        </div>
+        <div id="market-list">
+            <ul>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+                <li class="market-item"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pagination">
+
+        <a href="#" class="href-left">
+            <i class="icon-left">
+                        &lt;
+                    </i>
+        </a>
+        <div class="chufa">
+            <a href="#0" id="navhover" class="pagination-page-number">1</a>
+            <a href="#0" id="" class="pagination-page-number">2</a>
+            <a href="#0" id="" class="pagination-page-number">3</a>
+            <a href="#0" id="" class="pagination-page-number">4</a>
+            <a href="#0" id="" class="pagination-page-number">5</a>
+            <a href="#0" id="" class="pagination-page-number">6</a>
+            <a href="#0" id="" class="pagination-page-number">7</a>
+        </div>
+        <a href="#0" class="href-right">
+            <i class="icon-right">
+                        &gt;
+                    </i>
+        </a>
+    </div>
+</body>
+<script>
+    //let page = 1;
+    //    $('.href-right').off('click').on('click', function() {
+    let end = '/'
+    let url = "https://www.cnhnb.com/hangqing/cdlist-0-0-0-0-0-"
+    $(document).ready(function() {
+        $(function() {
+            $.ajax({
+                url: 'http://localhost:3000/user/username',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                cache: false,
+                timeout: 5000,
+                success: function(data) {
+                    if (data.flag) {
+                        let html = '<div class="xia"><ul class="top-m">'
+                        html += '<li class="hehe"><a href="" class="menu-btn">欢迎你:' + data.name + '</a>'
+                        html += '<ul class="topDown"><li class="mine"><a href="#">个人中心</a></li>'
+                        html += '<li class="logout"><a href="#">退出登陆</a></li></ul></li></ul></div>'
+                        $('.yonghu').empty()
+                        $('.yonghu').append(html)
+                        $(".topDown").hide()
+                        $(".hehe").hover(function() {
+                                $(".topDown").show()
+                            },
+                            function() {
+                                $(".topDown").hide()
+
+                            });
+                    }
+                }
+            })
+        })
+        $('.pagination-page-number').on('click', function() {
+            $(this).stop().attr("id", "navhover").siblings("a").attr("id", "")
+            let page = $('#navhover').text()
+            let urlNew = url + page + end
+            print(urlNew)
+        })
+        $('.href-right').on('click', function() {
+            let page = parseInt($('#navhover').text())
+            let pageNew = page + 1
+            alert(page)
+                //  $('.pagination-page-number:eq(0)').text()
+            $($(".pagination-page-number:eq(" + page + ")")).stop().attr("id", "navhover").siblings("a").attr("id", "")
+                //alert($(".pagination-page-number:eq(" + page + ")").text())
+            let urlNew = url + pageNew + end
+            print(urlNew)
+        })
+        $('.href-left').on('click', function() {
+            let page = parseInt($('#navhover').text())
+            if (page > 1) {
+                let pageNew = page - 1
+                let index = page - 2
+                $($(".pagination-page-number:eq(" + index + ")")).stop().attr("id", "navhover").siblings("a").attr("id", "")
+            } else {
+                alert('没有上一页')
+                let pageNew = page
+            }
+            alert(pageNew)
+            let urlNew = url + pageNew + end
+            print(urlNew)
+        })
+        print(url + 1 + end)
+    })
+
+    function print(url) {
+        let love = craw(url);
+        love.then(function(dataNew) {
+            $('li.market-item').empty();
+            $.each(dataNew, function(index, item) {
+                $.each($('li.market-item'), function(i) {
+                    if (index === i) {
+                        var a = $('<div></div>').text(item.food_time)
+                        var b = $('<div></div>').text(item.food_place)
+                        var c = $('<div></div>').text(item.food_product)
+                        var d = $('<div></div>').text(item.food_price)
+                        var e = $('<div></div>').text(item.food_lifting)
+                        $(this).prepend(a, c, b, d, e)
+                    }
+                })
+            })
+        })
+    }
+
+    let dataNew = []
+
+    function craw(url) {
+
+        // alert(url)
+        let defer = $.Deferred();
+        $.ajax({
+            data: {
+                urls: url
+            },
+            url: 'http://localhost:3000/craw',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                dataNew.length = 0
+                for (let i = 0; i < data.length; i++) {
+                    dataNew.push({
+                        food_time: data[i].food_time,
+                        food_product: data[i].food_product,
+                        food_place: data[i].food_place,
+                        food_price: data[i].food_price,
+                        food_lifting: data[i].food_lifting
+                    })
+                }
+                /*      dataNew.push({
+                              food_time: data[0].food_time,
+                              food_product: data[0].food_product,
+                              food_place: data[0].food_place,
+                              food_price: data[0].food_price,
+                              food_lifting: data[0].food_lifting
+                          })
+                                  let flag = false;
+                                  for (let i = 0; i < data.length; i++) {
+                                      for (j = 0; j < dataNew.length; j++) {
+                                          if (data[i].food_product != dataNew[j].food_product ||
+                                              data[i].food_place != dataNew[j].food_place ||
+                                              data[i].food_price != dataNew[j].food_price) {
+                                              flag = true;
+
+                                          } else {
+                                              flag = false;
+                                              break;
+                                          }
+                                      }
+                                      if (flag) {
+                                          dataNew.push({
+                                              food_time: data[i].food_time,
+                                              food_product: data[i].food_product,
+                                              food_place: data[i].food_place,
+                                              food_price: data[i].food_price,
+                                              food_lifting: data[i].food_lifting
+                                          });
+                                      }
+                                      j = 0;
+                                      flag = false;
+                                  }*/
+                //   for (k in dataNew) {
+                //       document.write(k + dataNew[k].food_product + dataNew[k].food_price + dataNew[k].food_lifting + '<br/>')
+                //   }
+                // alert(dataNew.length)
+                defer.resolve(dataNew);
+                // return dataNew
+
+            },
+            error: function(err) {
+                console.log('请求错误');
+            }
+        });
+        return defer.promise();
+    }
+
+    // $(".market-list").load(location.href + " .market-list")  局部刷新div
+
+    $('.logout').on('click', function() {
+        $.ajax({
+            url: 'http://localhost:3000/user/logout',
+            dataType: 'json',
+            type: 'POST',
+            cache: false,
+            timeout: 5000,
+            success: function() {
+                alert('退出成功，返回首页')
+                window.location.href = 'index.html'
+                    // setTimeout("location.href='index.html'", 3000)
+            }
+        })
+    });
+</script>
+
+</html>

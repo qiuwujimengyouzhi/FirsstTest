@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link href="../CSS/store.css" rel="stylesheet">
+    <link href="../CSS/product.css" rel="stylesheet">
+    <script src="../JS/jquery-1.11.2.min.js"></script>
+    <script src="../JS/store.js"></script>
+    <script src="../JS/jquery.cookie.js"></script>
+    <title>store</title>
+</head>
+
+<body>
+    <div class="head">
+        <div class="head-a">
+            <img class="storeBg" src=" ">
+        </div>
+        <div class="head-b">
+            <span class="storeN"></span>
+            <p class="dengji"></p>
+        </div>
+    </div>
+    <div class="content">
+        <ul class="nav">
+            <a class="connav" href="#">
+                <b>商品</b>
+            </a>
+            <a href="#">
+                <li>精选</li>
+            </a>
+            <a href="#">
+                <li>活动</li>
+            </a>
+            <a href="#">
+                <li>上新</li>
+            </a>
+            <a href="#">
+                <li>评分</li>
+            </a>
+        </ul>
+        <div class="con-all">
+            <div class="con">
+                <div class="shangpin">
+                    <!-- <iframe frameborder="0" height="468px" width="100%" src="product.html"></iframe> -->
+                </div>
+                <div class="footer">
+                    <ul class="pagination">
+                        <li value="pre"><a href="#">《</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li value="aft"><a href="#">》</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="con">
+                <h2>Nothing2</h2>
+            </div>
+            <div class="con">
+                <h2>Nothing3</h2>
+            </div>
+            <div class="con">
+                <h2>Nothing4</h2>
+            </div>
+            <div class="con">
+                <div class="pingfen">
+                    你的评分(1~5):<input type="text" class="fenshu">
+                    <input type="button" class="sub" value="提交">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        let userids = window.location.href.split('=')[1];
+        let test = userids.substring(userids.length - 1, userids.length)
+        let tests = userids.substring(0, userids.length - 1)
+        if (test == '#') {
+            userids = tests
+        }
+        // alert(userids)
+        $.ajax({
+            url: 'http://localhost:3000/product/shop',
+            data: {
+                userid: userids
+            },
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(result) {
+                $('.storeBg').attr('src', `http://localhost:3000${result.storeBg}`)
+                $('.storeN').append(result.storeName)
+                $('.dengji').empty()
+                for (i = 0; i < result.dengji; i++) {
+                    $('.dengji').append('★')
+                }
+                let useridf = userids
+                $.ajax({
+                    url: 'http://localhost:3000/product/priPro',
+                    data: {
+                        userid: useridf
+                    },
+                    dataType: 'json',
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    timeout: 5000,
+                    success: function(result) {
+                        if (result != '') {
+                            let jsonLength = 0;
+                            for (let item in result) {
+                                jsonLength++;
+                            }
+                            // alert(jsonLength)
+                            first(0, 3)
+                            let page = 1
+                            $('.pagination>li').click(function() {
+
+                                pages = $(this).text()
+                                alert('aa' + $(this).text())
+                                if (pages == '《') {
+                                    page = page - 1
+                                } else if (pages == '》') {
+                                    page = page + 1
+                                } else {
+                                    page = pages
+                                }
+                                alert('now' + page)
+                                if (page == 0) {
+                                    alert('已经是第一页')
+                                    page = 1
+                                } else if (4 * page - 4 > jsonLength) {
+                                    alert('没有这一页')
+                                } else if (4 * page + 1 > jsonLength) {
+                                    if (4 * page - 4 < jsonLength) {
+                                        a = 4 * page - 4
+                                        b = jsonLength
+                                        first(a, b)
+                                    } else {
+                                        $(this).addClass('.disabled')
+                                    }
+                                } else {
+                                    let a = 4 * page - 4
+                                    let b = 4 * page - 1
+                                    first(a, b)
+                                }
+                                //     let a = 4 * page - 3
+                                //     let b = 4 * page + 1
+                                //     first(a, b);
+                                // } else {
+                                //     let a = 4 * page - 4
+                                //     let b = jsonLength
+                                //     first(a, b)
+                                // }
+                            })
+                        }
+
+                        function first(pageF, pageL) {
+                            $('.product').remove()
+                            for (let i = pageF; i < pageL + 1; i++) {
+                                // alert((result[i].time).getTime())
+                                let d = new Date(result[i].time)
+                                let times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+                                let html = '<div class="product"> <div class="card">'
+                                html += '<table class="msg" bordercolorlight="#A05153" border-collapse: "separate" cellpadding="0" cellspacing="0">'
+                                html += '<tbody> <tr><th>图片</th><th>商品名</th><th>价格</th> <th>生产地址</th>'
+                                html += '<th>商品类型</th> <th>优惠</th> <th>生产时间</th><th>商家</th>'
+                                html += '</tr><tr><td><img class="tupian" src="http://localhost:3000' + result[i].pictures + '"</td><td>' + result[i].product + '</td>'
+                                html += '<td>' + result[i].price + '</td><td>' + result[i].place + '</td>'
+                                html += '<td>' + result[i].type + '</td><td>' + result[i].discount + '</td><td>' + times + '</td>'
+                                html += '<td>' + result[i].store + '</td>'
+                                html += '</tr></tbody></table></div></div>'
+                                $('.shangpin').append(html)
+                            }
+                        }
+
+
+                    }
+                })
+
+
+            }
+        })
+    });
+    // $.cookie("jishi", 0, {
+    //     expires: 7
+    // })
+    $('.sub').click(function() {
+        let userids = window.location.href.split('=')[1];
+        let test = userids.substring(userids.length - 1, userids.length)
+        let tests = userids.substring(0, userids.length - 1)
+        let fen = $('.fenshu').val()
+
+        // let time = $.cookie("jishi")
+        // alert(time)
+        if (test == '#') {
+            userids = tests
+        }
+        // if (time == 0) {
+        //     time = 10; //设定间隔时间（秒）           
+        //     //启动计时器，倒计时time秒后自动关闭计时器。
+        //     var index = setInterval(function() {
+        //         time--;
+        //         if (time == 0) {
+        //             clearInterval(index);
+        //         }
+        //     }, 1000);
+        //     $.cookie('jishi', time, {
+        //         expires: 7
+        //     })
+        $.ajax({
+                url: 'http://localhost:3000/product/pingfen',
+                data: {
+                    userid: userids,
+                    fen: fen
+                },
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                cache: false,
+                timeout: 5000,
+                success: function(result) {
+                    if (result.flag) {
+                        alert('感谢您的评价,已有' + result.count + '人评价')
+                        window.location.reload()
+                    }
+                }
+            })
+            // } else {
+            //     alert('提交次数过于频繁！稍后再试');
+            // }
+    });
+</script>
+
+</html>

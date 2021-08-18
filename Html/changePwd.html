@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="http://at.alicdn.com/t/font_1740081_18ac6y0q0g.css" rel="stylesheet" />
+    <link href="../CSS/changePwd.css" rel="stylesheet" />
+    <script src="../JS/jquery-1.11.2.min.js"></script>
+    <script src="../bootstrap-4.3.1-dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <form class="change" role="form" action="#" method="post">
+
+
+        你的旧密码：
+        <input class="form-control pwd old" type="password" required />
+        <div class="f">
+            <a href="#" class="iconfont icon-view view"></a>
+        </div>
+
+        <br>新密码：
+        <input class="form-control pwd new1" type="password" required />
+        <div class="f">
+            <a href="#" class="iconfont icon-view view"></a>
+        </div>
+
+        <br>确认你的密码：
+        <input class="form-control pwd new2" type="password" required />
+        <div class="f">
+            <a href="#" class="iconfont icon-view view"></a>
+        </div>
+
+
+        <div class="btn">
+            <input class="btn btn-primary btn-lg " id="reset" type="reset" value="重置" />
+            <input class="btn btn-primary btn-lg " id="sub" type="submit" value="提交" />
+        </div>
+    </form>
+</body>
+<script>
+    $('.view').mousedown(function() {
+        let index = $('.view').index(this)
+        $('.pwd').eq(index).attr('type', 'text')
+    });
+    $('.view').mouseup(function() {
+        let index = $('.view').index(this)
+        $('.pwd').eq(index).attr('type', 'password')
+    });
+
+
+    $('#sub').click(function() {
+        let old = $('.old').val()
+        let new1 = $('.new1').val()
+        let new2 = $('.new2').val()
+
+        let userid = ''
+        let flag = false
+        let flag2 = false
+        $.ajax({
+            url: 'http://localhost:3000/user/username',
+            dataType: 'json',
+            type: 'POST',
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                userid = data.userid
+                if (old == data.pwd) {
+                    flag = true
+                }
+                if (new1 == new2) {
+                    flag2 = true
+                }
+                if (flag && flag2) {
+                    $.ajax({
+                        data: {
+                            old: old,
+                            userid: userid,
+                            new1: new1,
+                        },
+                        url: 'http://localhost:3000/user/changePwd',
+                        dataType: 'json',
+                        type: 'POST',
+                        cache: false,
+                        async: false,
+                        timeout: 5000,
+                        success: function(data) {
+                            if (data) {
+                                alert('更改成功，重新登陆')
+                                parent.location.href = 'index.html'
+                            } else {
+                                alert("更改失败")
+                            }
+
+                        },
+                        error: function() {
+                            alert("更改失败")
+                        }
+                    })
+                } else if (!flag) {
+                    alert('旧密码错误')
+                } else if (!flag2) {
+                    alert('新密码不一致')
+                }
+
+            }
+        })
+    });
+</script>
+
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>店铺管理</title>
+    <link href="../CSS/shop.css" rel="stylesheet" />
+    <script type="text/javascript" src="../JS/jquery-1.11.2.min.js"></script>
+</head>
+
+<body>
+    <div class="shop">
+        <div class="card">
+            <fieldset>
+                <legend class="div-title">基本资料</legend>
+                <h4 class="storeN">店铺名称：</h4>
+                <h4 class="storeI">店铺介绍：</h4>
+            </fieldset>
+        </div>
+
+        <div class="card ">
+            <fieldset class="storebg">
+                <legend class="div-title">店铺管理</legend>
+                <h4 class="storeB">店铺背景图：</h4>
+                <h6 class="warn">用于宣传企业或店铺形象用，请勿上传带二维码或其他信息图片。</h6>
+            </fieldset>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'http://localhost:3000/user/username',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            cache: false,
+            timeout: 5000,
+            success: function(data) {
+                let user = data.userid
+                $.ajax({
+                    url: 'http://localhost:3000/product/shop',
+                    data: {
+                        userid: user
+                    },
+                    async: false,
+                    dataType: "json",
+                    type: "post",
+                    success: function(data) {
+                        $('.storeN').append(data.storeName)
+                        $('.storeI').append(data.storeIntro)
+                            // $('.storebg').empty()
+                        $('.storeB').after('<img class="tupian" src="http://localhost:3000' + data.storeBg + '">')
+                    }
+                })
+            }
+        })
+    });
+</script>
+
+</html>

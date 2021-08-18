@@ -1,0 +1,109 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    min-width: 1200px;
+}
+
+.t-btn {
+    width: 80px;
+    height: 30px;
+    background-color: #a62721;
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 16px;
+    line-height: 0px;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+}
+
+.banbox {
+    width: 100%;
+    height: 300px;
+    background-image: url(../images/timg.gif);
+    background-repeat: no-repeat;
+    background-size: 100% 300px;
+}
+
+#market-title {
+    width: 100%;
+    height: 40px;
+}
+
+#market-title>span {
+    display: inline-block;
+    letter-spacing: 10px;
+    text-align: center;
+    width: 19.7%;
+    line-height: 40px;
+    background-color: aqua;
+}
+
+li {
+    list-style-type: none;
+}
+
+.market-list {
+    width: 100%;
+}
+
+.market-item {
+    width: 100%;
+    height: 40px;
+    background-color: aquas;
+}
+
+.market-item div {
+    display: inline-block;
+    line-height: 40px;
+    text-align: center;
+    height: 40px;
+    border-bottom: solid 1px #dad3d3;
+    width: 20%;
+}
+
+
+/*分页*/
+
+a {
+    text-decoration: none;
+}
+
+.pagination {
+    display: flex;
+    height: 55px;
+    width: 100%;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.pagination-page-number,
+.href-right,
+.href-left {
+    display: flex;
+    height: 40px;
+    width: 40px;
+    margin-left: 20px;
+    transition-duration: 0.5s;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #000000;
+    border-radius: 8px;
+    border: 1px solid #dad3d3;
+}
+
+.chufa {
+    display: flex;
+    justify-content: center;
+    transition: all 1s;
+}
+
+.chufa>a:hover {
+    background-color: aqua;
+}
